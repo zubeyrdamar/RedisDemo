@@ -3,6 +3,11 @@
 The purpose of this application is to understand how Distributed Memory is used in .Net in its simplest form by performing basic operations with Redis. In the project, the In Memory Cache structure and Redis codes are fully coded with comment lines. Likewise, the README is written in an instructive manner.
 
 More comprehensive projects can be developed in line with the information shown here.
+<br>
+<br>
+
+![redis](https://github.com/zubeyrdamar/RedisDemo/assets/141228392/7b462067-b4ff-4fb4-afd2-4bd3ae365db4)
+
 <hr>
 
 ## Installation
