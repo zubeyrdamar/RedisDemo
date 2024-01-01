@@ -30,7 +30,57 @@ namespace RedisApp.Web.Controllers
 
             if (!memoryCache.TryGetValue("time", out _))
             {
-                memoryCache.Set<string>("time", DateTime.Now.ToString());
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
+
+                /*
+                |
+                |   When we cache a data, we also want to set an expiration time
+                |   for that data. Generally we do not want to get the same data
+                |   all the time.
+                |
+                |   Absolute Expiration: We define an exact time that data will be removed
+                |   Sliding Expiration: We define a period that data will be removed if
+                |                       data is not got in this time.
+                |
+                */
+
+                options.AbsoluteExpiration = DateTime.Now.AddSeconds(30);
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+
+                /*
+                |
+                |   When we cache our data we also can define the priority.
+                |   Priority matters when memory is full. When the memory is full,
+                |   we want to remove some of the cached data & this removal will
+                |   be done according to priority. Low priority data is removed first
+                |   & High priority data is removed last.
+                |
+                |   We have to be careful when using NeverRemove priority.
+                |   Because even though memory is full we cannot delete data in this
+                |   priority. This may throw an exception.
+                |
+                */
+
+                options.Priority = CacheItemPriority.Low;
+                options.Priority = CacheItemPriority.Normal;
+                options.Priority = CacheItemPriority.High;
+                options.Priority = CacheItemPriority.NeverRemove;
+
+                /*
+                |
+                |   When a cached data is removed we may want to know the reason why
+                |   data is removed. To get that information we call RegisterPostEvictionCallback
+                |   method.
+                |
+                */
+
+                options.RegisterPostEvictionCallback((key, value, reason, state) =>
+                {
+                    memoryCache.Set("callback", $"{key}:{value} is removed --- reason:{reason}");
+                });
+
+                memoryCache.Set<string>("time", DateTime.Now.ToString(), options);
             }
 
             return View();
@@ -66,8 +116,6 @@ namespace RedisApp.Web.Controllers
             /*
             |
             |   Remove : removes data with the given key
-            |
-            |   In this example time is removed after caching.
             |
             */
 
