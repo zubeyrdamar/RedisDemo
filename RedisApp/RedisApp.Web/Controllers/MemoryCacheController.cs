@@ -3,10 +3,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace RedisApp.Web.Controllers
 {
-    public class TimeController : Controller
+    public class MemoryCacheController : Controller
     {
         private readonly IMemoryCache memoryCache;
-        public TimeController(IMemoryCache memoryCache)
+        public MemoryCacheController(IMemoryCache memoryCache)
         {
             this.memoryCache = memoryCache;
         }
