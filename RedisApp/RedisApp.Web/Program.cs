@@ -1,3 +1,5 @@
+using RedisApp.Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -16,7 +18,7 @@ builder.Services.AddMemoryCache();
 
 /* 
 |-------------------------------------------------------
-| REDIS
+| REDIS DISTRIBUTED CACHE
 |------------------------------------------------------- 
 |
 | To be able to use Redis cache we need to add 
@@ -28,6 +30,27 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = "localhost:6379";
 });
+
+/* 
+|-------------------------------------------------------
+| REDIS STACK EXCHANGE
+|------------------------------------------------------- 
+|
+| To be able to use Redis Stack Exchange, we should 
+| create an istance of the Redis Service.
+|
+| It is important to create this instance as singleton.
+| We will only need one instance of Redis.
+|
+*/
+
+builder.Services.AddSingleton<RedisService>();
+
+/* 
+|
+| MIGRATIONS
+|
+*/
 
 var app = builder.Build();
 
@@ -42,5 +65,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "stackexchange", pattern: "StackExchange/{controller=StringType}/{action=Set}/{id?}");
 
 app.Run(); 

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using RedisApp.Web.Models;
+using System.Text;
 
 namespace RedisApp.Web.Controllers
 {
@@ -49,6 +50,7 @@ namespace RedisApp.Web.Controllers
 
             string jsonRedisData = JsonConvert.SerializeObject(model);
 
+
             /*
             |
             |   Set data in Redis (Distributed Cache)
@@ -80,6 +82,53 @@ namespace RedisApp.Web.Controllers
             distributedCache.Remove("name");
 
             return View();
+        }
+
+        public IActionResult SetFile()
+        {
+            /*
+            |
+            |   To save files in redis we need to convert the image
+            |   to a byte variable.
+            |
+            |   First, we need to get image. In this example we use
+            |   static image file and take its path.
+            |
+            */
+
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/redis.png");
+
+            /*
+            |
+            |   Then we convert the image to byte
+            |
+            */
+
+            byte[] imageByte = System.IO.File.ReadAllBytes(path);
+
+            /*
+            |
+            |   Then we should be able to cache image in Redis
+            |
+            */
+
+            distributedCache.Set("img", imageByte);
+
+            return View();
+        }
+
+        public IActionResult GetFile()
+        {
+            /*
+            |
+            |   To read files from redis we need to convert byte
+            |   to an image file
+            |
+            */
+
+            byte[] imageByte = distributedCache.Get("img") ?? [];
+            
+            return File(imageByte, "image/png");
         }
     }
 }
