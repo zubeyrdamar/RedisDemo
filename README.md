@@ -43,4 +43,4 @@ The most important of these is Redis, which we also mentioned in this applicatio
 
 Redis is a NoSql database and works with a key-value structure. One of the most important strengths of Redis is that it provides data consistency.
 
-For examples of Redisin application, read the code and comment lines in the project.
+For more information, read the comment lines in the project.
