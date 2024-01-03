@@ -1,0 +1,8 @@
+﻿<h1>This is the set type get page of Set Exchange</h1>
+
+<hr />
+
+@foreach (var item in ViewBag.Hash)
+{
+    <p>@item <a class="btn btn-sm btn-danger" asp-controller="SetType" asp-action="Delete" asp-route-data="@item">Delete</a></p>
+}
